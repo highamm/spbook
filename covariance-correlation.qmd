@@ -1,0 +1,3 @@
+# Spatial Covariance and Correlation
+
+building from <https://highamm.github.io/spmodel_intro/spatial-covariance.html>

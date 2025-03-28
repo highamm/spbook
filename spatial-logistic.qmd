@@ -1,0 +1,3 @@
+# Spatial Logistic Regression
+
+can build off of <https://highamm.github.io/spmodel_intro/logistic-modeling.html>

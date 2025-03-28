@@ -1,0 +1,3 @@
+# Introduction
+
+I believe the idea with this was to have something somewhat similar to the `R` package book: showing some of the big picture stuff of an analysis.

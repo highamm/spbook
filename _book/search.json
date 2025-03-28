@@ -1,0 +1,155 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "spbook",
+    "section": "",
+    "text": "Preface\nThis is a Quarto book.\nTo learn more about Quarto books visit https://quarto.org/docs/books.\n\n1 + 1\n\n[1] 2",
+    "crumbs": [
+      "Preface"
+    ]
+  },
+  {
+    "objectID": "intro-big-picture.html",
+    "href": "intro-big-picture.html",
+    "title": "1  Introduction",
+    "section": "",
+    "text": "I believe the idea with this was to have something somewhat similar to the R package book: showing some of the big picture stuff of an analysis.",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction</span>"
+    ]
+  },
+  {
+    "objectID": "spatial-exploration.html",
+    "href": "spatial-exploration.html",
+    "title": "2  Spatial Data Exploration",
+    "section": "",
+    "text": "building from https://highamm.github.io/spmodel_intro/data-exploration.html",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Spatial Data Exploration</span>"
+    ]
+  },
+  {
+    "objectID": "covariance-correlation.html",
+    "href": "covariance-correlation.html",
+    "title": "3  Spatial Covariance and Correlation",
+    "section": "",
+    "text": "building from https://highamm.github.io/spmodel_intro/spatial-covariance.html",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Spatial Covariance and Correlation</span>"
+    ]
+  },
+  {
+    "objectID": "spatial-data-in-r.html",
+    "href": "spatial-data-in-r.html",
+    "title": "4  Spatial Data in R",
+    "section": "",
+    "text": "location of this chapter might change, but would contain info on handling spatial data in R: sf objects, coordinate reference systems, etc.",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Spatial Data in R</span>"
+    ]
+  },
+  {
+    "objectID": "ind-linear-model.html",
+    "href": "ind-linear-model.html",
+    "title": "5  Linear Model with Independent Errors",
+    "section": "",
+    "text": "review of non-spatial linear models.",
+    "crumbs": [
+      "Modeling Point Data",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Linear Model with Independent Errors</span>"
+    ]
+  },
+  {
+    "objectID": "spatial-linear-model.html",
+    "href": "spatial-linear-model.html",
+    "title": "6  Spatial Linear Model",
+    "section": "",
+    "text": "building from https://highamm.github.io/spmodel_intro/point-modeling.html and https://highamm.github.io/spmodel_intro/model-assumptions.html",
+    "crumbs": [
+      "Modeling Point Data",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Spatial Linear Model</span>"
+    ]
+  },
+  {
+    "objectID": "prediction.html",
+    "href": "prediction.html",
+    "title": "7  Prediction",
+    "section": "",
+    "text": "building from https://highamm.github.io/spmodel_intro/prediction.html",
+    "crumbs": [
+      "Modeling Point Data",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Prediction</span>"
+    ]
+  },
+  {
+    "objectID": "model-building.html",
+    "href": "model-building.html",
+    "title": "8  Model Building",
+    "section": "",
+    "text": "general model building stuff, along with cross-validation.",
+    "crumbs": [
+      "Modeling Point Data",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Model Building</span>"
+    ]
+  },
+  {
+    "objectID": "spatial-logistic.html",
+    "href": "spatial-logistic.html",
+    "title": "9  Spatial Logistic Regression",
+    "section": "",
+    "text": "can build off of https://highamm.github.io/spmodel_intro/logistic-modeling.html",
+    "crumbs": [
+      "Spatial GLMs",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Spatial Logistic Regression</span>"
+    ]
+  },
+  {
+    "objectID": "spatial-glms.html",
+    "href": "spatial-glms.html",
+    "title": "11  Spatial GLMs",
+    "section": "",
+    "text": "(more general framework for glms).",
+    "crumbs": [
+      "Spatial GLMs",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Spatial GLMs</span>"
+    ]
+  },
+  {
+    "objectID": "areal.html",
+    "href": "areal.html",
+    "title": "12  Areal Data",
+    "section": "",
+    "text": "can build from https://highamm.github.io/spmodel_intro/areal-modeling.html",
+    "crumbs": [
+      "Areal Data",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Areal Data</span>"
+    ]
+  },
+  {
+    "objectID": "catch-all.html",
+    "href": "catch-all.html",
+    "title": "13  Catch All",
+    "section": "",
+    "text": "This is just a place to put things that don’t belong in a specific chapter right now. Things that we have discussed include:\ncatch-all chapter (non-spatial random effects, anisotropy, fixing spatial parameters, simulation, big data, spatial confounding)",
+    "crumbs": [
+      "Other",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Catch All</span>"
+    ]
+  },
+  {
+    "objectID": "applications.html",
+    "href": "applications.html",
+    "title": "14  Applications",
+    "section": "",
+    "text": "This is a place to put any ideas for specific “application” chapters, should we decide to go that route.",
+    "crumbs": [
+      "Other",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>Applications</span>"
+    ]
+  }
+]

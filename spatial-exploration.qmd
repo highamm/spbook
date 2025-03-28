@@ -1,0 +1,5 @@
+# Spatial Data Exploration
+
+building from <https://highamm.github.io/spmodel_intro/data-exploration.html>
+
+

@@ -1,0 +1,3 @@
+# Spatial Linear Model
+
+building from <https://highamm.github.io/spmodel_intro/point-modeling.html> and <https://highamm.github.io/spmodel_intro/model-assumptions.html>

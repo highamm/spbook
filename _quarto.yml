@@ -3,21 +3,42 @@ project:
 
 book:
   title: "spbook"
-  author: "Norah Jones"
+  author: "Michael Dumelle and Matt Higham"
   date: "3/28/2025"
   chapters:
     - index.qmd
-    - intro.qmd
-    - summary.qmd
-    - references.qmd
+    - part: Introduction
+      chapters:
+        - intro-big-picture.qmd
+        - spatial-exploration.qmd
+        - covariance-correlation.qmd
+        - spatial-data-in-r.qmd
+    - part: Modeling Point Data
+      chapters:
+        - ind-linear-model.qmd
+        - spatial-linear-model.qmd
+        - prediction.qmd
+        - model-building.qmd
+    - part: Spatial GLMs
+      chapters:
+        - spatial-logistic.qmd
+        - spatial-count.qmd
+        - spatial-glms.qmd
+    - part: Areal Data
+      chapters:
+        - areal.qmd
+    - part: Other
+      chapters:
+        - catch-all.qmd
+        - applications.qmd
+        - references.qmd
 
 bibliography: references.bib
 
 format:
   html:
     theme: cosmo
-  pdf:
-    documentclass: scrreprt
+  # pdf:
+  #   documentclass: scrreprt
 
-editor: visual
 

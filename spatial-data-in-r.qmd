@@ -1,0 +1,3 @@
+# Spatial Data in R
+
+location of this chapter might change, but would contain info on handling spatial data in R: sf objects, coordinate reference systems, etc.

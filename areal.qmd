@@ -1,0 +1,3 @@
+# Areal Data
+
+can build from <https://highamm.github.io/spmodel_intro/areal-modeling.html>

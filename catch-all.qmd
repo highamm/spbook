@@ -1,0 +1,6 @@
+# Catch All
+
+This is just a place to put things that don't belong in a specific chapter right now. Things that we have discussed include:
+
+
+catch-all chapter (non-spatial random effects, anisotropy, fixing spatial parameters, simulation, big data, spatial confounding)

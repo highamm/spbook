@@ -1,0 +1,3 @@
+# Spatial GLMs
+
+(more general framework for glms).
