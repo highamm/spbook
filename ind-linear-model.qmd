@@ -1,3 +1,106 @@
 # Linear Model with Independent Errors
 
-review of non-spatial linear models.
+review of non-spatial linear models.]
+
+```{r}
+#| message: false
+library(spmodel)
+library(tidyverse)
+library(knitr)
+```
+
+
+## The Linear Model Formulation and Assumptions
+
+```{r}
+#| label: fig-lm_data
+#| fig-cap: "A scatter plot of temperature versus log conductivity in the lake data."
+#| fig-alt: "A scatter plot of temperature versus log conductivity in the lake data."
+#| out-width: "100%"
+ggplot(lake, aes(x = temp, y = log_cond)) +
+  geom_point() +
+  theme_bw(base_size = 14)
+```
+
+
+## Parameter Estimation 
+
+Our goal is to find the best fitting line between temperature and log-conductivity (@fig-lm_data). But unfortunately, there are an infinite number of possible lines though these data, so how do we know which is best? Well, we could pick a few potential intercept and slope values and plot them, seeing which one appears to fit best.
+
+```{r}
+#| label: fig-lm_data_lines
+#| fig-cap: "A scatter plot of temperature versus log conductivity in the lake data with linear regression lines for various intercept and slope parameter combinations."
+#| fig-alt: "A scatter plot of temperature versus log conductivity in the lake data with linear regression lines for various intercept and slope parameter combinations."
+#| out-width: "100%"
+beta_set1 <- c(3, 0.3)
+beta_set2 <- c(8, -0.2)
+beta_set3 <- c(0, 1)
+beta_set4 <- c(6, 0)
+
+ggplot(lake, aes(x = temp, y = log_cond)) +
+  geom_point() +
+  geom_abline(intercept = beta_set1[1], slope = beta_set1[2], linewidth = 2, color = "blue") +
+  geom_abline(intercept = beta_set2[1], slope = beta_set2[2], linewidth = 2, color = "orange") +
+  geom_abline(intercept = beta_set3[1], slope = beta_set3[2], linewidth = 2, color = "green") +
+  geom_abline(intercept = beta_set4[1], slope = beta_set4[2], linewidth = 2, color = "pink") +  
+  theme_bw(base_size = 14) 
+```
+
+A few of these lines "feel" unreasonable. Log conductivity appears to increase linearly with temperature, suggesting a positive slope. The orange line has a negative slope and the pink line has no slope, so likely these aren't the best lines for the data. The blue line seems closer to most of the data points than the green line, so intuition suggests the blue line is the best of the four. But it would be helpful to have some empirical evidence suggesting superior performance of the blue line.
+
+```{r}
+intercept_col <- rep(1, NROW(lake))
+slope_col <- lake$temp
+X <- cbind(intercept_col, slope_col) |>
+  matrix(ncol = 2)
+y <- lake$log_cond
+```
+
+```{r}
+sse_set1 <- (y - X %*% beta_set1)^2 |>
+  sum()
+sse_set2 <- (y - X %*% beta_set2)^2 |>
+  sum()
+sse_set3 <- (y - X %*% beta_set3)^2 |>
+  sum()
+sse_set4 <- (y - X %*% beta_set4)^2 |>
+  sum()
+
+fits <- tibble(
+  line = c("blue", "orange", "green", "pink"),
+  sse = c(sse_set1, sse_set2, sse_set3, sse_set4)
+)
+fits
+```
+
+```{r}
+beta_best <- solve(t(X) %*% X) %*% t(X) %*% y
+beta_best
+
+ggplot(lake, aes(x = temp, y = log_cond)) +
+  geom_point() +
+  geom_abline(intercept = beta_set1[1], slope = beta_set1[2], linewidth = 2, color = "blue") +
+  geom_abline(intercept = beta_set2[1], slope = beta_set2[2], linewidth = 2, color = "orange") +
+  geom_abline(intercept = beta_set3[1], slope = beta_set3[2], linewidth = 2, color = "green") +
+  geom_abline(intercept = beta_set4[1], slope = beta_set4[2], linewidth = 2, color = "pink") +  
+  geom_abline(intercept = beta_best[1], slope = beta_best[2], linewidth = 2, color = "black") +  
+  theme_bw(base_size = 14) 
+
+(y - X %*% beta_best)^2 |>
+  sum()
+```
+
+
+```{r}
+lmod <- splm(log_cond ~ temp, data = lake, spcov_type = "none")
+coef(lmod)
+```
+
+
+## Model Diagnostics
+
+## Hypothesis Testing and Confidence Intervals
+
+## Prediction
+
+## Model Comparison
