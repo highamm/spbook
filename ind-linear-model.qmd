@@ -46,26 +46,32 @@ ggplot(lake, aes(x = temp, y = log_cond)) +
   theme_bw(base_size = 14) 
 ```
 
-A few of these lines "feel" unreasonable. Log conductivity appears to increase linearly with temperature, suggesting a positive slope. The orange line has a negative slope and the pink line has no slope, so likely these aren't the best lines for the data. The blue line seems closer to most of the data points than the green line, so intuition suggests the blue line is the best of the four. But it would be helpful to have some empirical evidence suggesting superior performance of the blue line.
+A few of these lines "feel" unreasonable. Log conductivity appears to increase linearly with temperature, suggesting a positive slope. The orange line has a negative slope and the pink line has no slope, so likely these aren't the best lines for the data. The blue line seems closer to most of the data points than the green line, so intuition suggests the blue line is the best of the four. But it would be helpful to have some empirical evidence suggesting superior performance of the blue line. 
+
+One way to measure the fit of a line is to calculate the sum of the squared errors (SSE) between the line and each point. A more accurate model has smaller errors, and hence a smaller SSE. 
 
 ```{r}
-intercept_col <- rep(1, NROW(lake))
-slope_col <- lake$temp
-X <- cbind(intercept_col, slope_col) |>
-  matrix(ncol = 2)
+# intercept_col <- rep(1, NROW(lake))
+# slope_col <- lake$temp
+# X <- cbind(intercept_col, slope_col) |>
+#   matrix(ncol = 2)
+yhat_set1 <- beta_set1[1] + beta_set1[2] * lake$temp
+yhat_set2 <- beta_set2[1] + beta_set2[2] * lake$temp
+yhat_set3 <- beta_set3[1] + beta_set3[2] * lake$temp
+yhat_set4 <- beta_set4[1] + beta_set4[2] * lake$temp
+
 y <- lake$log_cond
+sse_set1 <- (y - yhat_set1)^2 |>
+  sum()
+sse_set2 <- (y - yhat_set2)^2 |>
+  sum()
+sse_set3 <- (y - yhat_set3)^2 |>
+  sum()
+sse_set4 <- (y - yhat_set4)^2 |>
+  sum()
 ```
 
 ```{r}
-sse_set1 <- (y - X %*% beta_set1)^2 |>
-  sum()
-sse_set2 <- (y - X %*% beta_set2)^2 |>
-  sum()
-sse_set3 <- (y - X %*% beta_set3)^2 |>
-  sum()
-sse_set4 <- (y - X %*% beta_set4)^2 |>
-  sum()
-
 fits <- tibble(
   line = c("blue", "orange", "green", "pink"),
   sse = c(sse_set1, sse_set2, sse_set3, sse_set4)
@@ -74,9 +80,12 @@ fits
 ```
 
 ```{r}
-beta_best <- solve(t(X) %*% X) %*% t(X) %*% y
+lmod <- lm(log_cond ~ temp, data = lake)
+beta_best <- coef(lmod)
 beta_best
+```
 
+```{r}
 ggplot(lake, aes(x = temp, y = log_cond)) +
   geom_point() +
   geom_abline(intercept = beta_set1[1], slope = beta_set1[2], linewidth = 2, color = "blue") +
@@ -85,17 +94,16 @@ ggplot(lake, aes(x = temp, y = log_cond)) +
   geom_abline(intercept = beta_set4[1], slope = beta_set4[2], linewidth = 2, color = "pink") +  
   geom_abline(intercept = beta_best[1], slope = beta_best[2], linewidth = 2, color = "black") +  
   theme_bw(base_size = 14) 
-
-(y - X %*% beta_best)^2 |>
-  sum()
 ```
-
 
 ```{r}
-lmod <- splm(log_cond ~ temp, data = lake, spcov_type = "none")
-coef(lmod)
+yhat_best <- beta_best[1] + beta_best[2] * lake$temp
+sse_best <- (y - yhat_best)^2 |>
+  sum() 
+fits |>
+  add_row(line = "black", sse = sse_best) |>
+  arrange(sse)
 ```
-
 
 ## Model Diagnostics
 
@@ -104,3 +112,5 @@ coef(lmod)
 ## Prediction
 
 ## Model Comparison
+
+## Fitting a Nonspatial Linear Model in `spmodel`

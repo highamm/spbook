@@ -1,5 +1,59 @@
 [
   {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "spbook",
+    "section": "",
+    "text": "Preface\nThis is a Quarto book.\nTo learn more about Quarto books visit https://quarto.org/docs/books.\n\n1 + 1\n\n[1] 2",
+    "crumbs": [
+      "Preface"
+    ]
+  },
+  {
+    "objectID": "intro-big-picture.html",
+    "href": "intro-big-picture.html",
+    "title": "1  Introduction",
+    "section": "",
+    "text": "I believe the idea with this was to have something somewhat similar to the R package book: showing some of the big picture stuff of an analysis.",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction</span>"
+    ]
+  },
+  {
+    "objectID": "spatial-exploration.html",
+    "href": "spatial-exploration.html",
+    "title": "2  Spatial Data Exploration",
+    "section": "",
+    "text": "building from https://highamm.github.io/spmodel_intro/data-exploration.html",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Spatial Data Exploration</span>"
+    ]
+  },
+  {
+    "objectID": "covariance-correlation.html",
+    "href": "covariance-correlation.html",
+    "title": "3  Spatial Covariance and Correlation",
+    "section": "",
+    "text": "building from https://highamm.github.io/spmodel_intro/spatial-covariance.html",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Spatial Covariance and Correlation</span>"
+    ]
+  },
+  {
+    "objectID": "spatial-data-in-r.html",
+    "href": "spatial-data-in-r.html",
+    "title": "4  Spatial Data in R",
+    "section": "",
+    "text": "location of this chapter might change, but would contain info on handling spatial data in R: sf objects, coordinate reference systems, etc.",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Spatial Data in R</span>"
+    ]
+  },
+  {
     "objectID": "ind-linear-model.html",
     "href": "ind-linear-model.html",
     "title": "5  Linear Model with Independent Errors",
@@ -15,7 +69,7 @@
     "href": "ind-linear-model.html#parameter-estimation",
     "title": "5  Linear Model with Independent Errors",
     "section": "5.2 Parameter Estimation",
-    "text": "5.2 Parameter Estimation\nOur goal is to find the best fitting line between temperature and log-conductivity (Figure 5.1). But unfortunately, there are an infinite number of possible lines though these data, so how do we know which is best? Well, we could pick a few potential intercept and slope values and plot them, seeing which one appears to fit best.\n\nbeta_set1 &lt;- c(3, 0.3)\nbeta_set2 &lt;- c(8, -0.2)\nbeta_set3 &lt;- c(0, 1)\nbeta_set4 &lt;- c(6, 0)\n\nggplot(lake, aes(x = temp, y = log_cond)) +\n  geom_point() +\n  geom_abline(intercept = beta_set1[1], slope = beta_set1[2], linewidth = 2, color = \"blue\") +\n  geom_abline(intercept = beta_set2[1], slope = beta_set2[2], linewidth = 2, color = \"orange\") +\n  geom_abline(intercept = beta_set3[1], slope = beta_set3[2], linewidth = 2, color = \"green\") +\n  geom_abline(intercept = beta_set4[1], slope = beta_set4[2], linewidth = 2, color = \"pink\") +  \n  theme_bw(base_size = 14) \n\n\n\n\n\n\n\nFigure 5.2: A scatter plot of temperature versus log conductivity in the lake data with linear regression lines for various intercept and slope parameter combinations.\n\n\n\n\n\nA few of these lines “feel” unreasonable. Log conductivity appears to increase linearly with temperature, suggesting a positive slope. The orange line has a negative slope and the pink line has no slope, so likely these aren’t the best lines for the data. The blue line seems closer to most of the data points than the green line, so intuition suggests the blue line is the best of the four. But it would be helpful to have some empirical evidence suggesting superior performance of the blue line.\n\nintercept_col &lt;- rep(1, NROW(lake))\nslope_col &lt;- lake$temp\nX &lt;- cbind(intercept_col, slope_col) |&gt;\n  matrix(ncol = 2)\ny &lt;- lake$log_cond\n\n\nsse_set1 &lt;- (y - X %*% beta_set1)^2 |&gt;\n  sum()\nsse_set2 &lt;- (y - X %*% beta_set2)^2 |&gt;\n  sum()\nsse_set3 &lt;- (y - X %*% beta_set3)^2 |&gt;\n  sum()\nsse_set4 &lt;- (y - X %*% beta_set4)^2 |&gt;\n  sum()\n\nfits &lt;- tibble(\n  line = c(\"blue\", \"orange\", \"green\", \"pink\"),\n  sse = c(sse_set1, sse_set2, sse_set3, sse_set4)\n)\nfits\n\n# A tibble: 4 × 2\n  line     sse\n  &lt;chr&gt;  &lt;dbl&gt;\n1 blue    149.\n2 orange  613.\n3 green  2675.\n4 pink    210.\n\n\n\nbeta_best &lt;- solve(t(X) %*% X) %*% t(X) %*% y\nbeta_best\n\n          [,1]\n[1,] 4.1805239\n[2,] 0.1697978\n\nggplot(lake, aes(x = temp, y = log_cond)) +\n  geom_point() +\n  geom_abline(intercept = beta_set1[1], slope = beta_set1[2], linewidth = 2, color = \"blue\") +\n  geom_abline(intercept = beta_set2[1], slope = beta_set2[2], linewidth = 2, color = \"orange\") +\n  geom_abline(intercept = beta_set3[1], slope = beta_set3[2], linewidth = 2, color = \"green\") +\n  geom_abline(intercept = beta_set4[1], slope = beta_set4[2], linewidth = 2, color = \"pink\") +  \n  geom_abline(intercept = beta_best[1], slope = beta_best[2], linewidth = 2, color = \"black\") +  \n  theme_bw(base_size = 14) \n\n\n\n\n\n\n\n(y - X %*% beta_best)^2 |&gt;\n  sum()\n\n[1] 93.73778\n\n\n\nlmod &lt;- splm(log_cond ~ temp, data = lake, spcov_type = \"none\")\ncoef(lmod)\n\n(Intercept)        temp \n  4.1805239   0.1697978",
+    "text": "5.2 Parameter Estimation\nOur goal is to find the best fitting line between temperature and log-conductivity (Figure 5.1). But unfortunately, there are an infinite number of possible lines though these data, so how do we know which is best? Well, we could pick a few potential intercept and slope values and plot them, seeing which one appears to fit best.\n\nbeta_set1 &lt;- c(3, 0.3)\nbeta_set2 &lt;- c(8, -0.2)\nbeta_set3 &lt;- c(0, 1)\nbeta_set4 &lt;- c(6, 0)\n\nggplot(lake, aes(x = temp, y = log_cond)) +\n  geom_point() +\n  geom_abline(intercept = beta_set1[1], slope = beta_set1[2], linewidth = 2, color = \"blue\") +\n  geom_abline(intercept = beta_set2[1], slope = beta_set2[2], linewidth = 2, color = \"orange\") +\n  geom_abline(intercept = beta_set3[1], slope = beta_set3[2], linewidth = 2, color = \"green\") +\n  geom_abline(intercept = beta_set4[1], slope = beta_set4[2], linewidth = 2, color = \"pink\") +  \n  theme_bw(base_size = 14) \n\n\n\n\n\n\n\nFigure 5.2: A scatter plot of temperature versus log conductivity in the lake data with linear regression lines for various intercept and slope parameter combinations.\n\n\n\n\n\nA few of these lines “feel” unreasonable. Log conductivity appears to increase linearly with temperature, suggesting a positive slope. The orange line has a negative slope and the pink line has no slope, so likely these aren’t the best lines for the data. The blue line seems closer to most of the data points than the green line, so intuition suggests the blue line is the best of the four. But it would be helpful to have some empirical evidence suggesting superior performance of the blue line.\nOne way to measure the fit of a line is to calculate the sum of the squared errors (SSE) between the line and each point. A more accurate model has smaller errors, and hence a smaller SSE.\n\n# intercept_col &lt;- rep(1, NROW(lake))\n# slope_col &lt;- lake$temp\n# X &lt;- cbind(intercept_col, slope_col) |&gt;\n#   matrix(ncol = 2)\nyhat_set1 &lt;- beta_set1[1] + beta_set1[2] * lake$temp\nyhat_set2 &lt;- beta_set2[1] + beta_set2[2] * lake$temp\nyhat_set3 &lt;- beta_set3[1] + beta_set3[2] * lake$temp\nyhat_set4 &lt;- beta_set4[1] + beta_set4[2] * lake$temp\n\ny &lt;- lake$log_cond\nsse_set1 &lt;- (y - yhat_set1)^2 |&gt;\n  sum()\nsse_set2 &lt;- (y - yhat_set2)^2 |&gt;\n  sum()\nsse_set3 &lt;- (y - yhat_set3)^2 |&gt;\n  sum()\nsse_set4 &lt;- (y - yhat_set4)^2 |&gt;\n  sum()\n\n\nfits &lt;- tibble(\n  line = c(\"blue\", \"orange\", \"green\", \"pink\"),\n  sse = c(sse_set1, sse_set2, sse_set3, sse_set4)\n)\nfits\n\n# A tibble: 4 × 2\n  line     sse\n  &lt;chr&gt;  &lt;dbl&gt;\n1 blue    149.\n2 orange  613.\n3 green  2675.\n4 pink    210.\n\n\n\nlmod &lt;- lm(log_cond ~ temp, data = lake)\nbeta_best &lt;- coef(lmod)\nbeta_best\n\n(Intercept)        temp \n  4.1805239   0.1697978 \n\n\n\nggplot(lake, aes(x = temp, y = log_cond)) +\n  geom_point() +\n  geom_abline(intercept = beta_set1[1], slope = beta_set1[2], linewidth = 2, color = \"blue\") +\n  geom_abline(intercept = beta_set2[1], slope = beta_set2[2], linewidth = 2, color = \"orange\") +\n  geom_abline(intercept = beta_set3[1], slope = beta_set3[2], linewidth = 2, color = \"green\") +\n  geom_abline(intercept = beta_set4[1], slope = beta_set4[2], linewidth = 2, color = \"pink\") +  \n  geom_abline(intercept = beta_best[1], slope = beta_best[2], linewidth = 2, color = \"black\") +  \n  theme_bw(base_size = 14) \n\n\n\n\n\n\n\n\n\nyhat_best &lt;- beta_best[1] + beta_best[2] * lake$temp\nsse_best &lt;- (y - yhat_best)^2 |&gt;\n  sum() \nfits |&gt;\n  add_row(line = \"black\", sse = sse_best) |&gt;\n  arrange(sse)\n\n# A tibble: 5 × 2\n  line      sse\n  &lt;chr&gt;   &lt;dbl&gt;\n1 black    93.7\n2 blue    149. \n3 pink    210. \n4 orange  613. \n5 green  2675.",
     "crumbs": [
       "Modeling Point Data",
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>Linear Model with Independent Errors</span>"
@@ -66,47 +120,14 @@
     ]
   },
   {
-    "objectID": "intro-big-picture.html",
-    "href": "intro-big-picture.html",
-    "title": "1  Introduction",
-    "section": "",
-    "text": "I believe the idea with this was to have something somewhat similar to the R package book: showing some of the big picture stuff of an analysis.",
+    "objectID": "ind-linear-model.html#fitting-a-nonspatial-linear-model-in-spmodel",
+    "href": "ind-linear-model.html#fitting-a-nonspatial-linear-model-in-spmodel",
+    "title": "5  Linear Model with Independent Errors",
+    "section": "5.7 Fitting a Nonspatial Linear Model in spmodel",
+    "text": "5.7 Fitting a Nonspatial Linear Model in spmodel",
     "crumbs": [
-      "Introduction",
-      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction</span>"
-    ]
-  },
-  {
-    "objectID": "spatial-exploration.html",
-    "href": "spatial-exploration.html",
-    "title": "2  Spatial Data Exploration",
-    "section": "",
-    "text": "building from https://highamm.github.io/spmodel_intro/data-exploration.html",
-    "crumbs": [
-      "Introduction",
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Spatial Data Exploration</span>"
-    ]
-  },
-  {
-    "objectID": "covariance-correlation.html",
-    "href": "covariance-correlation.html",
-    "title": "3  Spatial Covariance and Correlation",
-    "section": "",
-    "text": "building from https://highamm.github.io/spmodel_intro/spatial-covariance.html",
-    "crumbs": [
-      "Introduction",
-      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Spatial Covariance and Correlation</span>"
-    ]
-  },
-  {
-    "objectID": "spatial-data-in-r.html",
-    "href": "spatial-data-in-r.html",
-    "title": "4  Spatial Data in R",
-    "section": "",
-    "text": "location of this chapter might change, but would contain info on handling spatial data in R: sf objects, coordinate reference systems, etc.",
-    "crumbs": [
-      "Introduction",
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Spatial Data in R</span>"
+      "Modeling Point Data",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Linear Model with Independent Errors</span>"
     ]
   },
   {
@@ -151,6 +172,50 @@
     "crumbs": [
       "Spatial GLMs",
       "<span class='chapter-number'>9</span>  <span class='chapter-title'>Spatial Logistic Regression</span>"
+    ]
+  },
+  {
+    "objectID": "spatial-glms.html",
+    "href": "spatial-glms.html",
+    "title": "11  Spatial GLMs",
+    "section": "",
+    "text": "(more general framework for glms).",
+    "crumbs": [
+      "Spatial GLMs",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Spatial GLMs</span>"
+    ]
+  },
+  {
+    "objectID": "areal.html",
+    "href": "areal.html",
+    "title": "12  Areal Data",
+    "section": "",
+    "text": "can build from https://highamm.github.io/spmodel_intro/areal-modeling.html",
+    "crumbs": [
+      "Areal Data",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Areal Data</span>"
+    ]
+  },
+  {
+    "objectID": "catch-all.html",
+    "href": "catch-all.html",
+    "title": "13  Catch All",
+    "section": "",
+    "text": "This is just a place to put things that don’t belong in a specific chapter right now. Things that we have discussed include:\ncatch-all chapter (non-spatial random effects, anisotropy, fixing spatial parameters, simulation, big data, spatial confounding)",
+    "crumbs": [
+      "Other",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Catch All</span>"
+    ]
+  },
+  {
+    "objectID": "applications.html",
+    "href": "applications.html",
+    "title": "14  Applications",
+    "section": "",
+    "text": "This is a place to put any ideas for specific “application” chapters, should we decide to go that route.",
+    "crumbs": [
+      "Other",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>Applications</span>"
     ]
   }
 ]

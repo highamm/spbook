@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.555">
+<meta name="generator" content="quarto-1.4.553">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -307,6 +307,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#hypothesis-testing-and-confidence-intervals" id="toc-hypothesis-testing-and-confidence-intervals" class="nav-link" data-scroll-target="#hypothesis-testing-and-confidence-intervals"><span class="header-section-number">5.4</span> Hypothesis Testing and Confidence Intervals</a></li>
   <li><a href="#prediction" id="toc-prediction" class="nav-link" data-scroll-target="#prediction"><span class="header-section-number">5.5</span> Prediction</a></li>
   <li><a href="#model-comparison" id="toc-model-comparison" class="nav-link" data-scroll-target="#model-comparison"><span class="header-section-number">5.6</span> Model Comparison</a></li>
+  <li><a href="#fitting-a-nonspatial-linear-model-in-spmodel" id="toc-fitting-a-nonspatial-linear-model-in-spmodel" class="nav-link" data-scroll-target="#fitting-a-nonspatial-linear-model-in-spmodel"><span class="header-section-number">5.7</span> Fitting a Nonspatial Linear Model in <code>spmodel</code></a></li>
   </ul>
 </nav>
     </div>
@@ -335,15 +336,48 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>review of non-spatial linear models.]</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spmodel)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'tidyverse' was built under R version 4.4.1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'ggplot2' was built under R version 4.4.2</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'tibble' was built under R version 4.4.1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'tidyr' was built under R version 4.4.1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'readr' was built under R version 4.4.1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'purrr' was built under R version 4.4.1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'dplyr' was built under R version 4.4.1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'stringr' was built under R version 4.4.1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'forcats' was built under R version 4.4.1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'lubridate' was built under R version 4.4.1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'knitr' was built under R version 4.4.1</code></pre>
+</div>
 </div>
 <section id="the-linear-model-formulation-and-assumptions" class="level2" data-number="5.1">
 <h2 data-number="5.1" class="anchored" data-anchor-id="the-linear-model-formulation-and-assumptions"><span class="header-section-number">5.1</span> The Linear Model Formulation and Assumptions</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(lake, <span class="fu">aes</span>(<span class="at">x =</span> temp, <span class="at">y =</span> log_cond)) <span class="sc">+</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">14</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(lake, <span class="fu">aes</span>(<span class="at">x =</span> temp, <span class="at">y =</span> log_cond)) <span class="sc">+</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">14</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-lm_data" class="quarto-figure quarto-figure-center quarto-float anchored" alt="A scatter plot of temperature versus log conductivity in the lake data.">
 <figure class="quarto-float quarto-float-fig figure">
@@ -362,18 +396,18 @@ Figure&nbsp;5.1: A scatter plot of temperature versus log conductivity in the la
 <h2 data-number="5.2" class="anchored" data-anchor-id="parameter-estimation"><span class="header-section-number">5.2</span> Parameter Estimation</h2>
 <p>Our goal is to find the best fitting line between temperature and log-conductivity (<a href="#fig-lm_data" class="quarto-xref">Figure&nbsp;<span>5.1</span></a>). But unfortunately, there are an infinite number of possible lines though these data, so how do we know which is best? Well, we could pick a few potential intercept and slope values and plot them, seeing which one appears to fit best.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>beta_set1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="fl">0.3</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>beta_set2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">8</span>, <span class="sc">-</span><span class="fl">0.2</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>beta_set3 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>beta_set4 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">6</span>, <span class="dv">0</span>)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(lake, <span class="fu">aes</span>(<span class="at">x =</span> temp, <span class="at">y =</span> log_cond)) <span class="sc">+</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> beta_set1[<span class="dv">1</span>], <span class="at">slope =</span> beta_set1[<span class="dv">2</span>], <span class="at">linewidth =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> beta_set2[<span class="dv">1</span>], <span class="at">slope =</span> beta_set2[<span class="dv">2</span>], <span class="at">linewidth =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"orange"</span>) <span class="sc">+</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> beta_set3[<span class="dv">1</span>], <span class="at">slope =</span> beta_set3[<span class="dv">2</span>], <span class="at">linewidth =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"green"</span>) <span class="sc">+</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> beta_set4[<span class="dv">1</span>], <span class="at">slope =</span> beta_set4[<span class="dv">2</span>], <span class="at">linewidth =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"pink"</span>) <span class="sc">+</span>  </span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">14</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>beta_set1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="fl">0.3</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>beta_set2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">8</span>, <span class="sc">-</span><span class="fl">0.2</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>beta_set3 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>beta_set4 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">6</span>, <span class="dv">0</span>)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(lake, <span class="fu">aes</span>(<span class="at">x =</span> temp, <span class="at">y =</span> log_cond)) <span class="sc">+</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> beta_set1[<span class="dv">1</span>], <span class="at">slope =</span> beta_set1[<span class="dv">2</span>], <span class="at">linewidth =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> beta_set2[<span class="dv">1</span>], <span class="at">slope =</span> beta_set2[<span class="dv">2</span>], <span class="at">linewidth =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"orange"</span>) <span class="sc">+</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> beta_set3[<span class="dv">1</span>], <span class="at">slope =</span> beta_set3[<span class="dv">2</span>], <span class="at">linewidth =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"green"</span>) <span class="sc">+</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> beta_set4[<span class="dv">1</span>], <span class="at">slope =</span> beta_set4[<span class="dv">2</span>], <span class="at">linewidth =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"pink"</span>) <span class="sc">+</span>  </span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">14</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-lm_data_lines" class="quarto-figure quarto-figure-center quarto-float anchored" alt="A scatter plot of temperature versus log conductivity in the lake data with linear regression lines for various intercept and slope parameter combinations.">
 <figure class="quarto-float quarto-float-fig figure">
@@ -388,28 +422,33 @@ Figure&nbsp;5.2: A scatter plot of temperature versus log conductivity in the la
 </div>
 </div>
 <p>A few of these lines “feel” unreasonable. Log conductivity appears to increase linearly with temperature, suggesting a positive slope. The orange line has a negative slope and the pink line has no slope, so likely these aren’t the best lines for the data. The blue line seems closer to most of the data points than the green line, so intuition suggests the blue line is the best of the four. But it would be helpful to have some empirical evidence suggesting superior performance of the blue line.</p>
+<p>One way to measure the fit of a line is to calculate the sum of the squared errors (SSE) between the line and each point. A more accurate model has smaller errors, and hence a smaller SSE.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>intercept_col <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span>, <span class="fu">NROW</span>(lake))</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>slope_col <span class="ot">&lt;-</span> lake<span class="sc">$</span>temp</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">cbind</span>(intercept_col, slope_col) <span class="sc">|&gt;</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">matrix</span>(<span class="at">ncol =</span> <span class="dv">2</span>)</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> lake<span class="sc">$</span>log_cond</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># intercept_col &lt;- rep(1, NROW(lake))</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co"># slope_col &lt;- lake$temp</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co"># X &lt;- cbind(intercept_col, slope_col) |&gt;</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co">#   matrix(ncol = 2)</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>yhat_set1 <span class="ot">&lt;-</span> beta_set1[<span class="dv">1</span>] <span class="sc">+</span> beta_set1[<span class="dv">2</span>] <span class="sc">*</span> lake<span class="sc">$</span>temp</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>yhat_set2 <span class="ot">&lt;-</span> beta_set2[<span class="dv">1</span>] <span class="sc">+</span> beta_set2[<span class="dv">2</span>] <span class="sc">*</span> lake<span class="sc">$</span>temp</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>yhat_set3 <span class="ot">&lt;-</span> beta_set3[<span class="dv">1</span>] <span class="sc">+</span> beta_set3[<span class="dv">2</span>] <span class="sc">*</span> lake<span class="sc">$</span>temp</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>yhat_set4 <span class="ot">&lt;-</span> beta_set4[<span class="dv">1</span>] <span class="sc">+</span> beta_set4[<span class="dv">2</span>] <span class="sc">*</span> lake<span class="sc">$</span>temp</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> lake<span class="sc">$</span>log_cond</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>sse_set1 <span class="ot">&lt;-</span> (y <span class="sc">-</span> yhat_set1)<span class="sc">^</span><span class="dv">2</span> <span class="sc">|&gt;</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>()</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>sse_set2 <span class="ot">&lt;-</span> (y <span class="sc">-</span> yhat_set2)<span class="sc">^</span><span class="dv">2</span> <span class="sc">|&gt;</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>()</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>sse_set3 <span class="ot">&lt;-</span> (y <span class="sc">-</span> yhat_set3)<span class="sc">^</span><span class="dv">2</span> <span class="sc">|&gt;</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>()</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>sse_set4 <span class="ot">&lt;-</span> (y <span class="sc">-</span> yhat_set4)<span class="sc">^</span><span class="dv">2</span> <span class="sc">|&gt;</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>sse_set1 <span class="ot">&lt;-</span> (y <span class="sc">-</span> X <span class="sc">%*%</span> beta_set1)<span class="sc">^</span><span class="dv">2</span> <span class="sc">|&gt;</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>()</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>sse_set2 <span class="ot">&lt;-</span> (y <span class="sc">-</span> X <span class="sc">%*%</span> beta_set2)<span class="sc">^</span><span class="dv">2</span> <span class="sc">|&gt;</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>()</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>sse_set3 <span class="ot">&lt;-</span> (y <span class="sc">-</span> X <span class="sc">%*%</span> beta_set3)<span class="sc">^</span><span class="dv">2</span> <span class="sc">|&gt;</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>()</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>sse_set4 <span class="ot">&lt;-</span> (y <span class="sc">-</span> X <span class="sc">%*%</span> beta_set4)<span class="sc">^</span><span class="dv">2</span> <span class="sc">|&gt;</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>()</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>fits <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">line =</span> <span class="fu">c</span>(<span class="st">"blue"</span>, <span class="st">"orange"</span>, <span class="st">"green"</span>, <span class="st">"pink"</span>),</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">sse =</span> <span class="fu">c</span>(sse_set1, sse_set2, sse_set3, sse_set4)</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>fits</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>fits <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">line =</span> <span class="fu">c</span>(<span class="st">"blue"</span>, <span class="st">"orange"</span>, <span class="st">"green"</span>, <span class="st">"pink"</span>),</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">sse =</span> <span class="fu">c</span>(sse_set1, sse_set2, sse_set3, sse_set4)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>fits</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 2
   line     sse
@@ -421,40 +460,47 @@ Figure&nbsp;5.2: A scatter plot of temperature versus log conductivity in the la
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>beta_best <span class="ot">&lt;-</span> <span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X) <span class="sc">%*%</span> <span class="fu">t</span>(X) <span class="sc">%*%</span> y</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>beta_best</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>          [,1]
-[1,] 4.1805239
-[2,] 0.1697978</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(lake, <span class="fu">aes</span>(<span class="at">x =</span> temp, <span class="at">y =</span> log_cond)) <span class="sc">+</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> beta_set1[<span class="dv">1</span>], <span class="at">slope =</span> beta_set1[<span class="dv">2</span>], <span class="at">linewidth =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> beta_set2[<span class="dv">1</span>], <span class="at">slope =</span> beta_set2[<span class="dv">2</span>], <span class="at">linewidth =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"orange"</span>) <span class="sc">+</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> beta_set3[<span class="dv">1</span>], <span class="at">slope =</span> beta_set3[<span class="dv">2</span>], <span class="at">linewidth =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"green"</span>) <span class="sc">+</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> beta_set4[<span class="dv">1</span>], <span class="at">slope =</span> beta_set4[<span class="dv">2</span>], <span class="at">linewidth =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"pink"</span>) <span class="sc">+</span>  </span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> beta_best[<span class="dv">1</span>], <span class="at">slope =</span> beta_best[<span class="dv">2</span>], <span class="at">linewidth =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span>  </span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">14</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="ind-linear-model_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>(y <span class="sc">-</span> X <span class="sc">%*%</span> beta_best)<span class="sc">^</span><span class="dv">2</span> <span class="sc">|&gt;</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 93.73778</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>lmod <span class="ot">&lt;-</span> <span class="fu">splm</span>(log_cond <span class="sc">~</span> temp, <span class="at">data =</span> lake, <span class="at">spcov_type =</span> <span class="st">"none"</span>)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(lmod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>lmod <span class="ot">&lt;-</span> <span class="fu">lm</span>(log_cond <span class="sc">~</span> temp, <span class="at">data =</span> lake)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>beta_best <span class="ot">&lt;-</span> <span class="fu">coef</span>(lmod)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>beta_best</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>(Intercept)        temp 
   4.1805239   0.1697978 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(lake, <span class="fu">aes</span>(<span class="at">x =</span> temp, <span class="at">y =</span> log_cond)) <span class="sc">+</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> beta_set1[<span class="dv">1</span>], <span class="at">slope =</span> beta_set1[<span class="dv">2</span>], <span class="at">linewidth =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> beta_set2[<span class="dv">1</span>], <span class="at">slope =</span> beta_set2[<span class="dv">2</span>], <span class="at">linewidth =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"orange"</span>) <span class="sc">+</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> beta_set3[<span class="dv">1</span>], <span class="at">slope =</span> beta_set3[<span class="dv">2</span>], <span class="at">linewidth =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"green"</span>) <span class="sc">+</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> beta_set4[<span class="dv">1</span>], <span class="at">slope =</span> beta_set4[<span class="dv">2</span>], <span class="at">linewidth =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"pink"</span>) <span class="sc">+</span>  </span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> beta_best[<span class="dv">1</span>], <span class="at">slope =</span> beta_best[<span class="dv">2</span>], <span class="at">linewidth =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span>  </span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">14</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ind-linear-model_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>yhat_best <span class="ot">&lt;-</span> beta_best[<span class="dv">1</span>] <span class="sc">+</span> beta_best[<span class="dv">2</span>] <span class="sc">*</span> lake<span class="sc">$</span>temp</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>sse_best <span class="ot">&lt;-</span> (y <span class="sc">-</span> yhat_best)<span class="sc">^</span><span class="dv">2</span> <span class="sc">|&gt;</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>() </span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>fits <span class="sc">|&gt;</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="at">line =</span> <span class="st">"black"</span>, <span class="at">sse =</span> sse_best) <span class="sc">|&gt;</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(sse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 2
+  line      sse
+  &lt;chr&gt;   &lt;dbl&gt;
+1 black    93.7
+2 blue    149. 
+3 pink    210. 
+4 orange  613. 
+5 green  2675. </code></pre>
 </div>
 </div>
 </section>
@@ -469,6 +515,9 @@ Figure&nbsp;5.2: A scatter plot of temperature versus log conductivity in the la
 </section>
 <section id="model-comparison" class="level2" data-number="5.6">
 <h2 data-number="5.6" class="anchored" data-anchor-id="model-comparison"><span class="header-section-number">5.6</span> Model Comparison</h2>
+</section>
+<section id="fitting-a-nonspatial-linear-model-in-spmodel" class="level2" data-number="5.7">
+<h2 data-number="5.7" class="anchored" data-anchor-id="fitting-a-nonspatial-linear-model-in-spmodel"><span class="header-section-number">5.7</span> Fitting a Nonspatial Linear Model in <code>spmodel</code></h2>
 
 
 </section>
